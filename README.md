@@ -196,15 +196,17 @@ We report single stratified train-test splits to match how the primary studies w
 
 ### Software / Replication Package
 
+```bibtex
 @software{chakravorty2026cryptojacking_code,
-  title={Cryptojacking Validation: AI Against Cloud Cryptojacking (Replication Package)},
-  author={Chakravorty, Amitabh},
-  year={2026},
-  version={v1.0.0},
-  publisher={Zenodo},
-  doi={10.5281/zenodo.18565269},
-  url={https://github.com/AmitabhCh822/cryptojacking-validation}
+  title   = {Cryptojacking Validation: AI Against Cloud Cryptojacking (Replication Package)},
+  author  = {Chakravorty, Amitabh},
+  year    = {2026},
+  version = {v1.0.0},
+  publisher = {Zenodo},
+  doi     = {10.5281/zenodo.18565269},
+  url     = {https://github.com/AmitabhCh822/cryptojacking-validation}
 }
+```
 
 ## License
 
