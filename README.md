@@ -194,15 +194,17 @@ We report single stratified train-test splits to match how the primary studies w
 
 ## Citation
 
-```bibtex
-@article{chakravorty2026cryptojacking,
-  title={Detecting Cryptojacking in Cloud Environments: A Systematic Review of AI-Based Defenses, Deployment Challenges, and Research Gaps},
-  author={Chakravorty, Amitabh and Elsayed, Nelly},
-  journal={International Journal of Information Security},
+### Software / Replication Package
+
+@software{chakravorty2026cryptojacking_code,
+  title={Cryptojacking Validation: AI Against Cloud Cryptojacking (Replication Package)},
+  author={Chakravorty, Amitabh},
   year={2026},
-  publisher={Springer Nature}
+  version={v1.0.0},
+  publisher={Zenodo},
+  doi={10.5281/zenodo.18565269},
+  url={https://github.com/AmitabhCh822/cryptojacking-validation}
 }
-```
 
 ## License
 
