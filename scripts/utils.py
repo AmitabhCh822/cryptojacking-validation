@@ -21,14 +21,14 @@ def load_processed_data(dataset_name, data_path='data/processed'):
     Load preprocessed data for a given dataset.
     
     Parameters:
-    -----------
+
     dataset_name : str
         Name of dataset ('ds2os' or 'nsl_kdd')
     data_path : str
         Path to processed data directory
         
     Returns:
-    --------
+
     tuple : (X_train, X_test, y_train, y_test)
     """
     X_train = np.load(f'{data_path}/X_train_{dataset_name}.npy')
@@ -44,14 +44,14 @@ def evaluate_model(y_true, y_pred):
     Calculate comprehensive evaluation metrics.
     
     Parameters:
-    -----------
+
     y_true : array-like
         True labels
     y_pred : array-like
         Predicted labels
         
     Returns:
-    --------
+
     dict : Dictionary containing all metrics
     """
     cm = confusion_matrix(y_true, y_pred)
@@ -79,7 +79,7 @@ def train_and_evaluate(model, model_name, X_train, X_test, y_train, y_test,
     Train a model and collect comprehensive metrics.
     
     Parameters:
-    -----------
+
     model : sklearn estimator
         Model to train
     model_name : str
@@ -96,27 +96,27 @@ def train_and_evaluate(model, model_name, X_train, X_test, y_train, y_test,
         Path to save models
         
     Returns:
-    --------
+
     tuple : (results_dict, confusion_matrix)
     """
-    print(f"\n{'='*60}")
+    print("\n")
     print(f"Training: {model_name} on {dataset_name.upper()}")
-    print(f"{'='*60}")
+    print("\n")
     
-    # Training
+    #Training
     start_time = time.time()
     model.fit(X_train, y_train)
     train_time = time.time() - start_time
     
-    # Prediction
+    #Prediction
     start_time = time.time()
     y_pred = model.predict(X_test)
     inference_time = time.time() - start_time
     
-    # Calculate metrics
+    #Calculate metrics
     metrics = evaluate_model(y_test, y_pred)
     
-    # Display results
+    #Display results
     print(f"\nResults:")
     print(f"  Accuracy:     {metrics['accuracy']:.4f} ({metrics['accuracy']*100:.2f}%)")
     print(f"  F1-Score:     {metrics['f1_score']:.4f}")
@@ -125,7 +125,7 @@ def train_and_evaluate(model, model_name, X_train, X_test, y_train, y_test,
     print(f"  Train time:   {train_time:.2f}s")
     print(f"  Inference:    {inference_time:.4f}s")
     
-    # Save model
+    #Save model
     if save_model:
         os.makedirs(models_path, exist_ok=True)
         model_filename = f'{models_path}/{model_name.replace(" ", "_")}_{dataset_name}.pkl'
@@ -133,7 +133,7 @@ def train_and_evaluate(model, model_name, X_train, X_test, y_train, y_test,
             pickle.dump(model, f)
         print(f"  Model saved: {model_filename}")
     
-    # Compile results
+    #Compile results
     results = {
         'model': model_name,
         'dataset': dataset_name,
@@ -157,7 +157,7 @@ def plot_confusion_matrices(cms_list, dataset_name, save_path='results/figures')
     Plot confusion matrices for multiple models.
     
     Parameters:
-    -----------
+
     cms_list : list of tuples
         List of (model_name, confusion_matrix) tuples
     dataset_name : str
@@ -197,7 +197,7 @@ def plot_performance_comparison(results_df, save_path='results/figures'):
     Create performance comparison visualizations.
     
     Parameters:
-    -----------
+    
     results_df : pd.DataFrame
         DataFrame containing model results
     save_path : str
@@ -205,7 +205,7 @@ def plot_performance_comparison(results_df, save_path='results/figures'):
     """
     os.makedirs(save_path, exist_ok=True)
     
-    # 1. Accuracy Comparison
+    #1. Accuracy Comparison
     fig, ax = plt.subplots(figsize=(12, 6))
     
     datasets = results_df['dataset'].unique()
@@ -226,14 +226,18 @@ def plot_performance_comparison(results_df, save_path='results/figures'):
     ax.set_xticks(x)
     ax.set_xticklabels(results_df['model'].unique(), rotation=45, ha='right')
     ax.legend()
-    ax.set_ylim(0.9, 1.02)
+    
+    #Dynamic y-axis based on actual data range
+    min_acc = results_df['accuracy'].min()
+    y_floor = max(0, min_acc - 0.05)
+    ax.set_ylim(y_floor, 1.02)
     ax.grid(axis='y', alpha=0.3)
     
     plt.tight_layout()
     plt.savefig(f'{save_path}/accuracy_comparison.png', dpi=300, bbox_inches='tight')
     plt.show()
     
-    # 2. Accuracy Heatmap
+    #2. Accuracy Heatmap
     fig, ax = plt.subplots(figsize=(10, 8))
     
     heatmap_data = results_df.pivot_table(
@@ -242,10 +246,13 @@ def plot_performance_comparison(results_df, save_path='results/figures'):
         columns='dataset'
     )
     
+    #Dynamic color range based on actual results
+    vmin = max(0, results_df['accuracy'].min() - 0.05)
+    
     sns.heatmap(heatmap_data, annot=True, fmt='.4f', cmap='RdYlGn',
-                vmin=0.85, vmax=1.0, cbar_kws={'label': 'Accuracy'},
+                vmin=vmin, vmax=1.0, cbar_kws={'label': 'Accuracy'},
                 linewidths=0.5, ax=ax)
-    ax.set_title('Accuracy Heatmap: Models × Datasets', fontsize=14, fontweight='bold')
+    ax.set_title('Accuracy Heatmap: Models x Datasets', fontsize=14, fontweight='bold')
     ax.set_xlabel('Dataset', fontsize=12, fontweight='bold')
     ax.set_ylabel('Model', fontsize=12, fontweight='bold')
     
@@ -259,29 +266,31 @@ def print_summary(results_df):
     Print summary statistics from results.
     
     Parameters:
-    -----------
+
     results_df : pd.DataFrame
         DataFrame containing model results
     """
-    print("\n" + "="*70)
+    print("\n")
     print("EXPERIMENT SUMMARY")
-    print("="*70)
+    print("\n")
     
     print(f"\nOverall Statistics:")
     print(f"  Total models trained: {len(results_df)}")
     print(f"  Datasets: {results_df['dataset'].nunique()}")
     
-    print(f"\nBest Performers:")
-    best_acc = results_df.loc[results_df['accuracy'].idxmax()]
-    print(f"  Highest Accuracy: {best_acc['model']} on {best_acc['dataset'].upper()} - {best_acc['accuracy']:.4f}")
+    #Per-dataset results
+    for dataset in results_df['dataset'].unique():
+        subset = results_df[results_df['dataset'] == dataset]
+        best = subset.loc[subset['accuracy'].idxmax()]
+        fastest = subset.loc[subset['train_time_sec'].idxmin()]
+        
+        print(f"\n  {dataset.upper()}:")
+        print(f"    Best accuracy:    {best['model']} - {best['accuracy']:.4f} ({best['accuracy']*100:.2f}%)")
+        print(f"    Best F1:          {best['model']} - {best['f1_score']:.4f}")
+        print(f"    Fastest training: {fastest['model']} - {fastest['train_time_sec']:.2f}s")
+        print(f"    Accuracy range:   {subset['accuracy'].min():.4f} to {subset['accuracy'].max():.4f}")
     
-    best_f1 = results_df.loc[results_df['f1_score'].idxmax()]
-    print(f"  Highest F1-Score: {best_f1['model']} on {best_f1['dataset'].upper()} - {best_f1['f1_score']:.4f}")
-    
-    fastest = results_df.loc[results_df['train_time_sec'].idxmin()]
-    print(f"  Fastest Training: {fastest['model']} on {fastest['dataset'].upper()} - {fastest['train_time_sec']:.2f}s")
-    
-    print(f"\nAverage Performance:")
+    print(f"\nOverall Averages:")
     print(f"  Mean Accuracy:  {results_df['accuracy'].mean():.4f}")
     print(f"  Mean F1-Score:  {results_df['f1_score'].mean():.4f}")
     print(f"  Mean Precision: {results_df['precision'].mean():.4f}")
