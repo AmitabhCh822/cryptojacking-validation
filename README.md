@@ -13,7 +13,6 @@ This repo contains the validation code for our systematic literature review:
 > **Detecting Cryptojacking in Cloud Environments: A Systematic Review of AI-Based Defenses, Deployment Challenges, and Research Gaps**  
 > *Amitabh Chakravorty, Nelly Elsayed*  
 > School of Information Technology, University of Cincinnati  
-> *International Journal of Information Security* (Springer Nature)
 
 We took representative ML models from the reviewed literature and tested them on public datasets to see how well reported results actually hold up. The short answer: they often don't. Reported accuracies are frequently inflated by data leakage and testing only on attack types the model already knows.
 
